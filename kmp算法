@@ -1,0 +1,52 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <string>
+#include <cstring>
+#include <cmath>
+#include <string.h>
+using namespace std;
+int main() {
+	char arr[102], brr[102];
+	int length1, length2, i;
+	while (cin >> arr >> brr){
+		length1 = strlen(arr);
+	for (i = length1 - 1; i >= 0; i--) {
+		arr[i + 1] = arr[i];
+	}
+	length2 = strlen(brr);
+	for (i = length2 - 1; i >= 0; i--) {
+		brr[i + 1] = brr[i];
+	}
+	i = 1;
+	int  next[101], j = 0;
+	next[1] = 0;
+	while (i < length2) {
+		if (j == 0 || arr[i] == arr[j]) {
+			++i;
+			++j;
+			if (brr[i] != brr[j])
+				next[i] = j;
+			else
+				next[i] = next[j];
+		}
+		else
+			j = next[j];
+	}
+	i = 1, j = 1;
+	while (i <= length1 && j <= length2) {
+		if (j == 0 || arr[i] == brr[j]) {
+			++j;
+			++i;
+		}
+		else
+			j = next[j];
+	}
+	if (j > length2)
+		cout << i - length2 << endl;
+	else
+		cout << 0 << endl;
+}
+	return 0;
+}
