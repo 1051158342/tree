@@ -1,0 +1,89 @@
+#include<iostream>
+#include<fstream>
+#include <cstdio>
+#include <cstring>
+using namespace std;
+#define OK 1
+#define ERROR 0
+#define OVERFLOW - 2
+typedef int Status;
+typedef double SElemType;
+
+typedef char TElemType;
+//二叉树的二叉链表存储表示
+typedef struct BiTNode {
+    TElemType data;                      //结点数据域
+    struct BiTNode* lchild, * rchild; //左右孩子指针
+} BiTNode, * BiTree;
+
+//根据先序序列pre[pre_low..pre_low+len-1]和中序序列in[in_low..in_low+len-1]建树t
+void BuildTree(BiTree& t, char pre[], int pre_low, char in[], int in_low, int len)
+{
+    /****在此下面完成代码************/
+    char ch;
+    int i, j;
+    t = NULL;
+    if (len != 0) {
+        ch = pre[0];
+        t = new BiTNode;
+        t->data = ch;
+        for (i = 0; i < len; i++) {
+            if (in[i] == ch)
+                break;
+        }
+
+        if (i > 0) {
+            BuildTree(t->lchild, pre + 1, 0, in, 0, i);
+        }
+        else t->lchild = NULL;
+        if (i + 1 < len) {
+            BuildTree(t->rchild, pre + 1+i, 0, in + i + 1, 0, len - i -1);//将pre向右移动i+1，将先序遍历中的左子树及根节点跳过，剩下的是右子树的部分。后序遍历in也是此操作。长度也变为右子树的长度。
+        }
+        else t->rchild = NULL;
+    }
+    /*********************************/
+}
+// 后序遍历的递归算法
+void PostOrderTraverse(BiTree t)
+{
+    /****在此下面完成代码************/
+    if (t)
+    {
+        PostOrderTraverse(t->lchild);
+        PostOrderTraverse(t->rchild);
+        cout << t->data;
+    }
+
+    /*********************************/
+}
+
+void DestroyBitree(BiTree& t)
+{
+    /****在此下面完成代码************/
+    BiTree p, q;
+    p = t;
+    if (p)
+    {
+        q = p;
+        DestroyBitree(q->lchild);
+        DestroyBitree(q->rchild);
+        delete p;
+
+    }
+
+    /*********************************/
+}
+
+int main()
+{
+    char pre[30], in[30];
+    BiTree t = NULL;
+    while (cin >> pre) {
+        cin >> in;
+        BuildTree(t, pre, 0, in, 0, strlen(in));
+        PostOrderTraverse(t);
+        DestroyBitree(t);
+        cout << endl;
+    }
+}
+
